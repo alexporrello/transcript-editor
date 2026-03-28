@@ -32,7 +32,7 @@ export class SpeakersController {
   @Get()
   getSpeakers(): Speaker[] {
     try {
-      return this.speakersService.getSpeakers();
+      return this.speakersService.getTranscriptGroups();
     } catch (err) {
       this.logger.error('Error listing speakers', err);
       throw new HttpException('Could not list speakers.', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -45,7 +45,7 @@ export class SpeakersController {
   @Get(':speaker/tapes')
   getTapes(@Param('speaker') speaker: string): Tape[] {
     try {
-      return this.speakersService.getTapes(speaker);
+      return this.speakersService.getTranscriptsByGroup(speaker);
     } catch (err) {
       if (err instanceof ForbiddenPathError) {
         throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
