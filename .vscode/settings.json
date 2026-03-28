@@ -1,0 +1,10 @@
+{
+  "prettier.enable": true,
+  "prettier.requireConfig": true,
+  "prettier.configPath": "./.prettierrc",
+  "prettier.prettierPath": "./node_modules/prettier",
+  "ltex.enabled": [
+    "latex",
+    "markdown"
+  ]
+}

@@ -1,0 +1,55 @@
+<div class="tape-list-container">
+    @if (!selectedSpeaker()) {
+        <div class="empty-state">
+            <mat-icon class="empty-icon">queue_music</mat-icon>
+            <p>Select a speaker to browse their tapes.</p>
+        </div>
+    } @else if (loading()) {
+        <div class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading tapes…</p>
+        </div>
+    } @else if (tapes().length === 0) {
+        <div class="empty-state">
+            <mat-icon class="empty-icon">inbox</mat-icon>
+            <p>No tapes found for this speaker.</p>
+        </div>
+    } @else {
+        @if (hasFavorites()) {
+            <div class="filter-bar">
+                <button
+                    mat-icon-button
+                    class="favorites-filter-btn"
+                    [class.active]="showFavoritesOnly()"
+                    [matTooltip]="showFavoritesOnly() ? 'Show all tapes' : 'Show favorites only'"
+                    (click)="showFavoritesOnly.set(!showFavoritesOnly())">
+                    <mat-icon>{{ showFavoritesOnly() ? 'star' : 'star_border' }}</mat-icon>
+                </button>
+            </div>
+        }
+        <div class="tape-scroll-viewport">
+            @if (displayedTapes().length === 0) {
+                <div class="empty-state">
+                    <mat-icon class="empty-icon">star_border</mat-icon>
+                    <p>No favorites yet. Star a tape to add it here.</p>
+                </div>
+            } @else {
+                <mat-nav-list>
+                    @for (tape of displayedTapes(); track tape.filename) {
+                        @let selected = isSelected(tape);
+
+                        <app-tape
+                            app-tape-component
+                            [tape]="tape"
+                            [selected]="selected"
+                            [favorited]="favoritesService.isFavorite(tape.filename)"
+                            [class.selected]="selected"
+                            (click)="selectTape(tape)"
+                            (toggleFavorite)="onToggleFavorite(tape)">
+                        </app-tape>
+                    }
+                </mat-nav-list>
+            }
+        </div>
+    }
+</div>

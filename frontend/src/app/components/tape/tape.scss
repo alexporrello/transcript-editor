@@ -1,0 +1,80 @@
+:host {
+    display: flex;
+    gap: 16px;
+    padding: 8px;
+    transition: background 250ms ease;
+
+    &:hover {
+        background: color-mix(in srgb, var(--mat-sys-surface-container) 85%, var(--mat-sys-surface) 15%);
+    }
+
+    &:active {
+        background: color-mix(in srgb, var(--mat-sys-surface-container) 65%, var(--mat-sys-surface) 35%);
+    }
+}
+
+.badge-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tape-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .tape-title {
+        font: var(--mat-sys-label-large);
+    }
+
+    .tape-meta {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        .date-chip {
+            font: var(--mat-sys-label-medium);
+            background: var(--mat-sys-secondary-container);
+            color: var(--mat-sys-on-secondary-container);
+            display: flex;
+            width: fit-content;
+            padding: 4px 8px;
+            border-radius: var(--mat-sys-corner-large);
+        }
+
+        .location {
+            font: var(--mat-sys-label-medium);
+        }
+    }
+}
+
+.tape-badges {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    color: var(--mat-sys-primary);
+}
+
+.favorite-btn {
+    color: var(--mat-sys-outline);
+    opacity: 0;
+    transition: opacity 150ms ease, color 150ms ease;
+
+    .badge-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+    }
+
+    &.is-favorited {
+        color: var(--mat-sys-primary);
+        opacity: 1;
+    }
+}
+
+:host:hover .favorite-btn {
+    opacity: 1;
+}

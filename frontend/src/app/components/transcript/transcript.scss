@@ -1,0 +1,383 @@
+// ─── Host ─────────────────────────────────────────────────────────────────────
+// transcript fills whatever card-body it's placed inside.
+
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+// ─── No transcript ────────────────────────────────────────────────────────────
+
+.no-transcript {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 10px;
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
+
+    .no-transcript-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        opacity: 0.35;
+    }
+
+    p {
+        margin: 0;
+        font-size: 13px;
+    }
+}
+
+// ─── Header content ───────────────────────────────────────────────────────────
+
+.transcript-title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+    overflow: hidden;
+
+    .tape-label-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .tape-date-text {
+        font-size: 12px;
+        color: var(--mat-sys-on-surface-variant);
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
+
+.mode-toggle {
+    ::ng-deep .mat-button-toggle {
+        font-size: 12px;
+        height: 28px;
+
+        .mat-button-toggle-label-content {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            line-height: 28px;
+            padding: 0 10px;
+
+            mat-icon {
+                font-size: 14px;
+                width: 14px;
+                height: 14px;
+            }
+        }
+    }
+}
+
+.mode-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.5));
+
+    mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+    }
+}
+
+// ─── Body ─────────────────────────────────────────────────────────────────────
+
+.transcript-body {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.loading-center {
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+}
+
+.error-msg {
+    padding: 16px;
+    font-size: 13px;
+    color: var(--mat-sys-error, #b00020);
+}
+
+// ─── Timed view ───────────────────────────────────────────────────────────────
+
+.srt-view {
+    height: 100%;
+    overflow-y: auto;
+    padding: 8px 0;
+}
+
+.segment {
+    display: flex;
+    gap: 10px;
+    padding: 7px 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 1px 6px;
+    transition: background 0.12s ease;
+    align-items: baseline;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.04);
+    }
+
+    &.active {
+        background: var(--mat-sys-primary-container, rgba(103, 80, 164, 0.14));
+
+        .timecode {
+            color: var(--mat-sys-primary, #6750a4);
+            font-weight: 600;
+        }
+
+        .seg-text {
+            color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87));
+            font-weight: 500;
+        }
+    }
+}
+
+.timecode {
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.5));
+    flex-shrink: 0;
+    width: 38px;
+    padding-top: 1px;
+}
+
+.seg-text {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.75));
+}
+
+// ─── Read view ────────────────────────────────────────────────────────────────
+
+.read-view {
+    height: 100%;
+    overflow-y: auto;
+    padding: 12px 0;
+}
+
+.read-paragraph {
+    display: flex;
+    gap: 0;
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 1px 6px;
+    transition: background 0.12s ease;
+    align-items: baseline;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.04);
+
+        .read-timecode {
+            opacity: 1;
+        }
+    }
+
+    &.active {
+        background: var(--mat-sys-primary-container, rgba(103, 80, 164, 0.14));
+
+        .read-timecode {
+            color: var(--mat-sys-primary, #6750a4);
+            font-weight: 600;
+            opacity: 1;
+        }
+
+        .read-text {
+            color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87));
+        }
+    }
+}
+
+.read-timecode {
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.4));
+    flex-shrink: 0;
+    width: 42px;
+    padding: 10px 8px 0 10px;
+    line-height: 1;
+    opacity: 0.4;
+    transition: opacity 0.12s ease;
+    user-select: none;
+}
+
+.read-text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.8));
+    margin: 0;
+    padding: 8px 14px 8px 0;
+    flex: 1;
+
+    strong {
+        font-weight: 600;
+    }
+
+    em {
+        font-style: italic;
+    }
+}
+
+.txt-view {
+    height: 100%;
+    overflow-y: auto;
+    padding: 14px 16px;
+
+    p {
+        margin: 0;
+        font-size: 13.5px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-word;
+        color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.8));
+    }
+}
+
+// ─── Edit view ────────────────────────────────────────────────────────────────
+
+.edit-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.edit-textarea {
+    flex: 1;
+    width: 100%;
+    resize: none;
+    border: none;
+    outline: none;
+    padding: 12px 14px;
+    font-family: 'Roboto Mono', 'Fira Mono', 'Consolas', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87));
+    background: var(--mat-sys-surface-container, #fffbfe);
+    box-sizing: border-box;
+    tab-size: 2;
+    overflow-y: auto;
+
+    &::placeholder {
+        color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.4));
+    }
+}
+
+.edit-statusbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 10px 6px 12px;
+    border-top: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.1));
+    background: var(--mat-sys-surface-container-low, #f7f2fb);
+    flex-shrink: 0;
+    min-height: 40px;
+}
+
+.edit-status-segment {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+
+    .status-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        color: var(--mat-sys-primary, #6750a4);
+        flex-shrink: 0;
+    }
+
+    .status-time {
+        font-size: 11px;
+        font-variant-numeric: tabular-nums;
+        color: var(--mat-sys-primary, #6750a4);
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+
+    .status-text {
+        font-size: 12px;
+        color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .status-idle {
+        font-size: 12px;
+        color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.35));
+        font-style: italic;
+    }
+}
+
+.edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+
+    .save-error {
+        font-size: 12px;
+        color: var(--mat-sys-error, #b00020);
+    }
+
+    .save-success {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: #2e7d32;
+
+        mat-icon {
+            font-size: 14px;
+            width: 14px;
+            height: 14px;
+        }
+    }
+
+    .discard-btn {
+        font-size: 12px;
+        height: 28px;
+        line-height: 28px;
+        padding: 0 10px;
+    }
+
+    .save-btn {
+        font-size: 12px;
+        height: 28px;
+        line-height: 28px;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        mat-icon {
+            font-size: 14px;
+            width: 14px;
+            height: 14px;
+        }
+
+        mat-spinner {
+            display: inline-flex;
+        }
+    }
+}

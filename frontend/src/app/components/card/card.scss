@@ -1,0 +1,7 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    background: var(--mat-sys-surface-container);
+    border-radius: 16px;
+    overflow: hidden;
+}

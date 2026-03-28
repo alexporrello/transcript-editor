@@ -1,0 +1,120 @@
+// ─── App container ────────────────────────────────────────────────────────────
+
+.app-container {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    height: 100vh;
+    box-sizing: border-box;
+    background: var(--mat-sys-background);
+    overflow: hidden;
+}
+
+// ─── Card sizing ──────────────────────────────────────────────────────────────
+
+.left-card {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+.right-card {
+    flex: 1;
+    min-width: 0;
+}
+
+// ─── Left card header content ─────────────────────────────────────────────────
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 500;
+    overflow: hidden;
+}
+
+.breadcrumb-link {
+    color: var(--mat-sys-on-surface-variant);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s;
+    flex-shrink: 0;
+
+    &:hover {
+        color: var(--mat-sys-on-surface);
+    }
+}
+
+.breadcrumb-sep {
+    color: var(--mat-sys-on-surface-variant);
+    opacity: 0.5;
+    flex-shrink: 0;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.breadcrumb-current {
+    color: var(--mat-sys-on-surface);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.header-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--mat-sys-on-surface-variant);
+    transition: background 0.15s, color 0.15s;
+
+    mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+    }
+
+    &:hover {
+        background: var(--mat-sys-surface-container-highest);
+        color: var(--mat-sys-on-surface);
+    }
+
+    &.active {
+        background: var(--mat-sys-primary-container);
+        color: var(--mat-sys-on-primary-container);
+    }
+}
+
+// ─── Empty states ─────────────────────────────────────────────────────────────
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 12px;
+    color: var(--mat-sys-on-surface-variant);
+
+    .empty-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        opacity: 0.25;
+    }
+
+    p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.6;
+    }
+}

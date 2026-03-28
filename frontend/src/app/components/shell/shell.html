@@ -1,0 +1,86 @@
+<div class="app-container">
+
+    <!-- ── Left card ─────────────────────────────────────────────────────── -->
+    <app-card class="left-card">
+
+        <app-card-header>
+            <nav class="breadcrumb">
+                @if (speakerId()) {
+                    <a class="breadcrumb-link" routerLink="/">Speakers</a>
+                    <span class="breadcrumb-sep">›</span>
+                    <span class="breadcrumb-current">{{ speakerName() }}</span>
+                } @else {
+                    <span class="breadcrumb-current">Speakers</span>
+                }
+            </nav>
+
+            @if (speakerId()) {
+                <button
+                    class="header-icon-btn"
+                    [class.active]="isSearchRoute()"
+                    (click)="toggleSearch()"
+                    [title]="isSearchRoute() ? 'Back to tapes (Esc)' : 'Search transcripts (⌘⇧F)'">
+                    <mat-icon>search</mat-icon>
+                </button>
+            }
+        </app-card-header>
+
+        <app-card-body>
+            @if (speakerId()) {
+                <app-tape-list></app-tape-list>
+            } @else {
+                <app-speaker-list></app-speaker-list>
+            }
+        </app-card-body>
+
+    </app-card>
+
+    <!-- ── Right card ────────────────────────────────────────────────────── -->
+    <app-card class="right-card">
+
+        <app-card-body>
+            @if (isSearchRoute()) {
+                <app-search></app-search>
+            } @else {
+                @let tape = selectedTape();
+                @let speaker = selectedSpeaker();
+
+                @if (tape && speaker) {
+                    <app-transcript
+                        [tape]="tape"
+                        [speakerId]="speaker"
+                        [initialMode]="initialEditMode()"
+                        [initialEditScroll]="initialEditScroll()"
+                        [initialEditCursor]="initialEditCursor()"
+                        (modeChanged)="onTranscriptModeChanged($event)"
+                        (editScrollChange)="onEditScrollChange($event)"
+                        (editCursorChange)="onEditCursorChange($event)">
+                    </app-transcript>
+                } @else if (speakerId()) {
+                    <div class="empty-state">
+                        <mat-icon class="empty-icon">queue_music</mat-icon>
+                        <p>Select a tape to view its transcript.</p>
+                    </div>
+                } @else {
+                    <div class="empty-state">
+                        <mat-icon class="empty-icon">graphic_eq</mat-icon>
+                        <p>Select a speaker to get started.</p>
+                    </div>
+                }
+            }
+        </app-card-body>
+
+        @let tape = selectedTape();
+        @let speaker = selectedSpeaker();
+        @if (tape && speaker) {
+            <app-card-footer>
+                <app-player
+                    [tape]="tape"
+                    [speakerId]="speaker">
+                </app-player>
+            </app-card-footer>
+        }
+
+    </app-card>
+
+</div>

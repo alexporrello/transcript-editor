@@ -1,0 +1,95 @@
+<div class="search-panel">
+
+    <!-- Header -->
+    <div class="search-header">
+        <span class="search-label">SEARCH</span>
+    </div>
+
+    <!-- Input row -->
+    <div class="search-input-row">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+            #searchInput
+            class="search-input"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            [placeholder]="speakerSelected ? 'Search transcripts…' : 'Select a speaker first'"
+            [disabled]="!speakerSelected"
+            [value]="query()"
+            (input)="onInput($event)"
+            (keydown)="onKeydown($event)"
+        />
+        @if (query()) {
+            <button class="clear-btn" (click)="clearQuery()" title="Clear">
+                <mat-icon>close</mat-icon>
+            </button>
+        }
+    </div>
+
+    <!-- Body -->
+    <div class="search-body">
+
+        @if (!speakerSelected) {
+            <div class="search-hint">
+                <mat-icon>person_search</mat-icon>
+                <p>Select a speaker from the sidebar to search their transcripts.</p>
+            </div>
+
+        } @else if (loading()) {
+            <div class="search-status">
+                <mat-spinner diameter="16"></mat-spinner>
+                <span>Searching…</span>
+            </div>
+
+        } @else if (searchPerformed() && results().length === 0) {
+            <div class="no-results">
+                <mat-icon>search_off</mat-icon>
+                <p>No results for "<strong>{{ query() }}</strong>"</p>
+            </div>
+
+        } @else if (results().length > 0) {
+            <div class="results-summary">
+                {{ totalMatchCount }} result{{ totalMatchCount !== 1 ? 's' : '' }}
+                in {{ results().length }} tape{{ results().length !== 1 ? 's' : '' }}
+            </div>
+
+            <div class="results-list">
+                @for (result of results(); track result.tape.filename) {
+                    <!-- Tape group header -->
+                    <div class="result-group">
+                        <div class="result-tape-header">
+                            <mat-icon class="tape-icon">audiotrack</mat-icon>
+                            <span class="tape-label">{{ tapeLabel(result.tape) }}</span>
+                            @if (result.tape.date) {
+                                <span class="tape-date">{{ tapeDate(result.tape) }}</span>
+                            }
+                            <span class="match-badge">{{ result.matches.length }}</span>
+                        </div>
+
+                        <!-- Individual matches -->
+                        @for (match of result.matches; track match.segmentIndex) {
+                            <div
+                                class="result-match"
+                                matRipple
+                                (click)="selectMatch(result.tape, match)">
+                                <span class="match-time">{{ formatTime(match.startTime) }}</span>
+                                <span
+                                    class="match-text"
+                                    [innerHTML]="highlightMatch(match.text, query())">
+                                </span>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+        } @else if (!query()) {
+            <div class="search-hint">
+                <mat-icon>manage_search</mat-icon>
+                <p>Type to search spoken words across all transcripts for this speaker.</p>
+            </div>
+        }
+
+    </div>
+</div>
