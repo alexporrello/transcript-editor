@@ -1,0 +1,76 @@
+<div class="app-shell">
+    <!-- Toolbar -->
+    <mat-toolbar
+        class="app-toolbar"
+        color="primary">
+        <mat-icon class="toolbar-icon">graphic_eq</mat-icon>
+        <span class="toolbar-title">Tape Viewer</span>
+
+        <span class="toolbar-spacer"></span>
+
+        <button
+            class="toolbar-search-btn"
+            [class.active]="searchOpen()"
+            (click)="toggleSearch()"
+            [matTooltip]="(searchOpen() ? 'Close search' : 'Search transcripts') + ' (⌘⇧F)'"
+            matTooltipPosition="below">
+            <mat-icon>search</mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <!-- Main layout -->
+    <mat-sidenav-container class="sidenav-container">
+        <!-- Left sidebar: speaker list -->
+        <mat-sidenav
+            mode="side"
+            [opened]="true"
+            class="speaker-sidenav">
+            <app-speaker-list></app-speaker-list>
+        </mat-sidenav>
+
+        <!-- Main content -->
+        <mat-sidenav-content class="main-content">
+            <div
+                class="content-layout"
+                [class.with-player]="!!selectedTape()">
+
+                <!-- Tape list pane — hidden when search is open -->
+                <div class="tape-list-pane" [class.hidden]="searchOpen()">
+                    <app-tape-list></app-tape-list>
+                </div>
+
+                <!-- Search pane — visible when search is open -->
+                @if (searchOpen()) {
+                    <div class="tape-list-pane">
+                        <app-search
+                            [speakerId]="selectedSpeaker() ?? ''"
+                            (closed)="closeSearch()">
+                        </app-search>
+                    </div>
+                }
+
+                @let tape = selectedTape();
+                @let speaker = selectedSpeaker();
+
+                @if (tape && speaker) {
+                    <div class="player-pane">
+                        <app-player
+                            [tape]="tape"
+                            [speakerId]="speaker">
+                        </app-player>
+                    </div>
+                    <div class="bottom-panel">
+                        @if (tape.hasTranscript) {
+                            <div class="transcript-pane">
+                                <app-transcript
+                                    [tape]="tape"
+                                    [speakerId]="speaker">
+                                </app-transcript>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

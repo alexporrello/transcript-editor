@@ -1,0 +1,158 @@
+@if (!hasAnyTranscript) {
+    <div class="no-transcript">
+        <mat-icon class="no-transcript-icon">subtitles_off</mat-icon>
+        <p>No transcript available for this tape.</p>
+    </div>
+} @else {
+    <!-- Header: label + mode toggle -->
+    <app-card-header>
+        <div class="transcript-title">
+            <span class="tape-label-text">{{ tapeLabel }}</span>
+            @if (tape.date) {
+                <span class="tape-date-text">{{ tape.date }}</span>
+            }
+        </div>
+
+        @if (showModeToggle) {
+            <mat-button-toggle-group
+                [value]="mode"
+                (change)="onModeChange($event.value)"
+                class="mode-toggle">
+                <mat-button-toggle value="timed" matTooltip="Synced with audio">
+                    <mat-icon>timer</mat-icon>
+                    Timed
+                </mat-button-toggle>
+                <mat-button-toggle value="read" matTooltip="Reading view">
+                    <mat-icon>menu_book</mat-icon>
+                    Read
+                </mat-button-toggle>
+                <mat-button-toggle value="edit" matTooltip="Edit raw SRT">
+                    <mat-icon>edit_note</mat-icon>
+                    Edit
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        } @else {
+            <!-- TXT-only tape: no toggle, just a read label -->
+            <div class="mode-label">
+                <mat-icon>menu_book</mat-icon>
+                Read
+            </div>
+        }
+    </app-card-header>
+
+    <!-- Content -->
+    <div class="transcript-body">
+        @if (loading) {
+            <div class="loading-center">
+                <mat-spinner diameter="32"></mat-spinner>
+            </div>
+        } @else if (error) {
+            <div class="error-msg">{{ error }}</div>
+        } @else if (mode === 'timed') {
+            <!-- ── Timed mode ─────────────────────────────────────────── -->
+            <div class="srt-view" #timedContainer>
+                @for (seg of srtSegments; track seg.index; let i = $index) {
+                    <div
+                        class="segment"
+                        [class.active]="i === activeSegmentIndex"
+                        (click)="seekToSegment(seg)">
+                        <span class="timecode">{{ formatTime(seg.startTime) }}</span>
+                        <span class="seg-text">{{ seg.text }}</span>
+                    </div>
+                }
+            </div>
+
+        } @else if (mode === 'read') {
+            <!-- ── Read mode ──────────────────────────────────────────── -->
+            <div class="read-view" #readContainer>
+                @if (readParagraphs.length) {
+                    @for (para of readParagraphs; track para.startTime; let i = $index) {
+                        <div
+                            class="read-paragraph"
+                            [class.active]="i === activeParagraphIndex"
+                            (click)="seekToTime(para.startTime)">
+                            <span
+                                class="read-timecode"
+                                [title]="formatTime(para.startTime)">
+                                {{ formatTime(para.startTime) }}
+                            </span>
+                            <p
+                                class="read-text"
+                                [innerHTML]="renderMarkdown(para.text)">
+                            </p>
+                        </div>
+                    }
+                } @else {
+                    <!-- TXT fallback -->
+                    <div class="txt-view">
+                        <p>{{ rawSrtContent }}</p>
+                    </div>
+                }
+            </div>
+
+        } @else if (mode === 'edit') {
+            <!-- ── Edit mode ──────────────────────────────────────────── -->
+            <div class="edit-view">
+                <textarea
+                    #editTextarea
+                    class="edit-textarea"
+                    [(ngModel)]="editContent"
+                    (input)="onEditInput()"
+                    (click)="onEditClick()"
+                    (scroll)="onEditScroll()"
+                    (keydown)="onEditKeydown($event)"
+                    spellcheck="true"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    placeholder="SRT content…"></textarea>
+
+                <!-- Status bar -->
+                <div class="edit-statusbar">
+                    <div class="edit-status-segment">
+                        @if (activeSegment) {
+                            <mat-icon class="status-icon">play_arrow</mat-icon>
+                            <span class="status-time">{{ formatTime(activeSegment.startTime) }}</span>
+                            <span class="status-text">{{ activeSegment.text }}</span>
+                        } @else {
+                            <span class="status-idle">No segment playing</span>
+                        }
+                    </div>
+
+                    <div class="edit-actions">
+                        @if (saveError) {
+                            <span class="save-error">{{ saveError }}</span>
+                        }
+                        @if (saveSuccess) {
+                            <span class="save-success">
+                                <mat-icon>check_circle</mat-icon>
+                                Saved
+                            </span>
+                        }
+                        @if (editDirty) {
+                            <button
+                                mat-button
+                                class="discard-btn"
+                                (click)="discardEdit()"
+                                [disabled]="saving">
+                                Discard
+                            </button>
+                        }
+                        <button
+                            mat-flat-button
+                            class="save-btn"
+                            (click)="saveEdit()"
+                            [disabled]="!editDirty || saving">
+                            @if (saving) {
+                                <mat-spinner diameter="14"></mat-spinner>
+                            } @else {
+                                <mat-icon>save</mat-icon>
+                            }
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,48 @@
+@let _tape = tape();
+
+@let _selected = selected();
+
+<!-- <div class="badge-wrapper">
+    <mat-icon [class.playing-icon]="_selected">
+        @if (_selected) {
+            graphic_eq
+        } @else {
+            audio_file
+        }
+    </mat-icon>
+</div> -->
+<div class="tape-details">
+    <span class="tape-title">
+        {{ label() }}
+    </span>
+    <span class="tape-meta">
+        <span class="date-chip">
+            {{ date() }}
+        </span>
+
+        @if (_tape.location) {
+            <span class="location">
+                {{ _tape.location }}
+            </span>
+        }
+    </span>
+</div>
+<div class="tape-badges">
+    <!-- @if (_tape.hasTranscript) {
+        @let tooltip =
+            _tape.hasSrt && _tape.hasTxt ? 'SRT + text transcript' : _tape.hasSrt ? 'SRT transcript' : 'Text transcript';
+        <span
+            class="transcript-badge"
+            [matTooltip]="tooltip">
+            <mat-icon class="badge-icon"> subtitles </mat-icon>
+        </span>
+    } -->
+    <button
+        mat-icon-button
+        class="favorite-btn"
+        [class.is-favorited]="favorited()"
+        [matTooltip]="favorited() ? 'Remove from favorites' : 'Add to favorites'"
+        (click)="$event.stopPropagation(); toggleFavorite.emit()">
+        <mat-icon class="badge-icon">{{ favorited() ? 'star' : 'star_border' }}</mat-icon>
+    </button>
+</div>

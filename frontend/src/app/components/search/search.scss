@@ -1,0 +1,295 @@
+// ─── Search panel ────────────────────────────────────────────────────────────
+// VSCode-inspired: compact, monospace hints, yellow highlights, dense results.
+
+.search-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: var(--mat-sys-surface-container-high);
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+
+.search-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px 4px;
+    flex-shrink: 0;
+}
+
+.search-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--mat-sys-on-surface-variant);
+    text-transform: uppercase;
+}
+
+.close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--mat-sys-on-surface-variant);
+    padding: 0;
+    transition: background 0.15s;
+
+    mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+    }
+
+    &:hover {
+        background: var(--mat-sys-surface-container-highest);
+        color: var(--mat-sys-on-surface);
+    }
+}
+
+// ─── Search input row ─────────────────────────────────────────────────────────
+
+.search-input-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px 12px 8px;
+    padding: 4px 8px;
+    background: var(--mat-sys-surface-container-lowest);
+    border: 1px solid var(--mat-sys-outline-variant);
+    border-radius: 4px;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+
+    &:focus-within {
+        border-color: var(--mat-sys-primary);
+        box-shadow: 0 0 0 1px var(--mat-sys-primary);
+    }
+}
+
+.search-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    color: var(--mat-sys-on-surface-variant);
+    flex-shrink: 0;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    color: var(--mat-sys-on-surface);
+    font-family: inherit;
+
+    &::placeholder {
+        color: var(--mat-sys-on-surface-variant);
+        opacity: 0.6;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+}
+
+.clear-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: none;
+    background: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--mat-sys-on-surface-variant);
+    padding: 0;
+    flex-shrink: 0;
+
+    mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        line-height: 14px;
+    }
+
+    &:hover {
+        background: var(--mat-sys-surface-container-highest);
+    }
+}
+
+// ─── Body / results area ──────────────────────────────────────────────────────
+
+.search-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+// ─── Empty / hint states ──────────────────────────────────────────────────────
+
+.search-hint,
+.no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+    padding: 24px;
+    text-align: center;
+    color: var(--mat-sys-on-surface-variant);
+
+    mat-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        opacity: 0.35;
+    }
+
+    p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.5;
+        opacity: 0.7;
+    }
+}
+
+.search-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+// ─── Results ─────────────────────────────────────────────────────────────────
+
+.results-summary {
+    padding: 2px 12px 6px;
+    font-size: 11px;
+    color: var(--mat-sys-on-surface-variant);
+    flex-shrink: 0;
+}
+
+.results-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 8px;
+}
+
+// ─── Result group (one tape) ──────────────────────────────────────────────────
+
+.result-group {
+    margin-bottom: 2px;
+}
+
+.result-tape-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px 4px;
+    position: sticky;
+    top: 0;
+    background: var(--mat-sys-surface-container-high);
+    z-index: 1;
+
+    .tape-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        line-height: 14px;
+        color: var(--mat-sys-primary);
+        flex-shrink: 0;
+    }
+
+    .tape-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .tape-date {
+        font-size: 11px;
+        color: var(--mat-sys-on-surface-variant);
+        flex-shrink: 0;
+    }
+
+    .match-badge {
+        font-size: 10px;
+        font-weight: 600;
+        background: var(--mat-sys-primary-container);
+        color: var(--mat-sys-on-primary-container);
+        border-radius: 10px;
+        padding: 1px 6px;
+        flex-shrink: 0;
+    }
+}
+
+// ─── Individual match row ─────────────────────────────────────────────────────
+
+.result-match {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 3px 12px 3px 28px;
+    cursor: pointer;
+    border-radius: 0;
+    transition: background 0.1s;
+    position: relative;
+
+    &:hover {
+        background: var(--mat-sys-surface-container-highest);
+    }
+
+    &:active {
+        background: var(--mat-sys-primary-container);
+    }
+}
+
+.match-time {
+    font-size: 10px;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--mat-sys-on-surface-variant);
+    flex-shrink: 0;
+    min-width: 36px;
+    text-align: right;
+    opacity: 0.75;
+}
+
+.match-text {
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+    line-height: 1.5;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    // Highlighted matches — VSCode yellow
+    ::ng-deep mark {
+        background: #e9b84b;
+        color: #1a1a1a;
+        border-radius: 2px;
+        padding: 0 1px;
+        font-weight: 500;
+    }
+}
